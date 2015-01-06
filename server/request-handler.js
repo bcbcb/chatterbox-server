@@ -71,6 +71,7 @@ exports.requestHandler = function(request, response) {
 };
 
 var db = {
+  "/classes/messages": [],
   "/classes/room1": []
 };
 

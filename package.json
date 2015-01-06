@@ -5,7 +5,7 @@
   "author": "Hack Reactor",
   "license": "Copyright 2013, Hack Reactor. All rights reserved.",
   "scripts": {
-    "test": "mocha server/spec/LiveServerIntegration.js"
+    "test": "mocha server/spec/LiveServerIntegrationSpec.js"
   },
   "devDependencies": {
     "mocha": "^1.21.4",
