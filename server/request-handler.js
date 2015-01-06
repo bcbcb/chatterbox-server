@@ -34,22 +34,23 @@ exports.requestHandler = function(request, response) {
   var data = {results: []};
   // The outgoing status.
   var statusCode;
+  var acRequestMethod = request.headers['access-control-request-method'];
 
-  if (request.method === 'GET') {
+  if (request.method === 'GET' || acRequestMethod === 'GET') {
     if (db[request.url] === undefined) {
       statusCode = 404;
     } else {
       statusCode = 200;
       data.results = db[request.url];
     }
-  } else if (request.method === 'POST') {
+  } else if (request.method === 'POST' || acRequestMethod === 'POST') {
     request.on('data', function(data){
       db[request.url].push(JSON.parse(data));
     });
     statusCode = 201;
   }
 
-
+  console.log('Request', request.url,'StatusCode', statusCode);
   // Tell the client we are sending them plain text.
   //
   // You will need to change this if you are sending something

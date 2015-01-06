@@ -1,0 +1,10 @@
+TODO
+
+- Create new room when room is not in rooms object
+- Store all messages with an objectId and a createdAt timestamp (ISO 8601)
+- Sort messages to be responded by createdAt timestap
+- Each roomname will have a corresponding key in our db object
+- For each room we will store all messages of that room in an array.
+- Also store all messages in a /messages array in the db object.
+- Parse the query string of the request URL using require('url').parse
+-

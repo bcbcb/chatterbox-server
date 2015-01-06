@@ -1,0 +1,56 @@
+ <!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Chatterbox jQuery</title>
+    <link rel="stylesheet" href="styles/styles.css">
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+
+    <!-- dependencies -->
+    <script src="bower_components/jquery/jquery.min.js"></script>
+    <script src="bower_components/underscore/underscore-min.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- your scripts -->
+    <script src="env/config.js"></script>
+    <script src="scripts/app.js"></script>
+    <script src="scripts/events.js"></script>
+  </head>
+  <body>
+    <nav class="navbar navbar-inverse navbar-static-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="">Chatterbox</a>
+          <ul class="nav navbar-nav">
+            <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Rooms<span class="caret"></span></a>
+            <ul class="dropdown-menu" role="menu" id="roomMenu">
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-md-8">
+        <h1></h1>
+          <!-- Your HTML goes here! -->
+          <ul class='list-group' id='chats'>
+          </ul>
+        </div>
+        <div class="col-md-4">
+          <h3>Enter Message</h3>
+          <textarea id="message" placeholder="Enter message" rows="6" cols="57"></textarea>
+          <div>
+            <button type="button" class="btn btn-success submit" id="send">Submit</button>
+          </div>
+          <div class="row col-md-12">
+          <table class="table table-bordered">
+            <tr>
+              <th>Friends</th>
+            </tr>
+          </table>
+          </div>
+        </div>
+    </div>
+  </body>
+</html>
