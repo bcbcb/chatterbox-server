@@ -1,3 +1,7 @@
+var checksum = require('json-checksum');
+var fs = require('fs');
+var _ = require('underscore');
+var parseQueryString = require('url').parse;
 /*************************************************************
 
 You should implement your request handler function in this file.
@@ -28,7 +32,7 @@ exports.requestHandler = function(request, response) {
   // debugging help, but you should always be careful about leaving stray
   // console.logs in your code.
   //console.log("Serving request type " + request.method + " for url " + request.url);
-
+  // console.log(checksum(JSON.stringify('OMAR')));
   // See the note below about CORS headers.
   var headers = defaultCorsHeaders;
   var data = {results: []};
@@ -36,21 +40,46 @@ exports.requestHandler = function(request, response) {
   var statusCode;
   var acRequestMethod = request.headers['access-control-request-method'];
 
+  var url = parseQueryString(request.url, true);
+
   if (request.method === 'GET' || acRequestMethod === 'GET') {
-    if (db[request.url] === undefined) {
-      statusCode = 404;
-    } else {
+    if (db.hasOwnProperty(url.pathname)) {
       statusCode = 200;
-      data.results = db[request.url];
+      data.results = db[url.pathname].ordered.slice();
+
+      if (url.query.order === '-createdAt') {
+        data.results.reverse();
+      }
+
+    } else {
+      statusCode = 404;
     }
   } else if (request.method === 'POST' || acRequestMethod === 'POST') {
-    request.on('data', function(data){
-      db[request.url].push(JSON.parse(data));
-    });
-    statusCode = 201;
+    if (db.hasOwnProperty(url.pathname)) {
+      request.on('data', function(data){
+
+        var receivedMessage = JSON.parse(data) ;
+        receivedMessage.createdAt = new Date().toISOString();
+        receivedMessage.objectId = checksum(receivedMessage);
+
+        db[url.pathname].ordered.push(receivedMessage);
+        db[url.pathname][receivedMessage.objectId] = receivedMessage;
+
+        fs.writeFile('db.json', JSON.stringify(db), function(err) {
+          if (err) {
+            throw err;
+          } else {
+            console.log('Saved POST to db...');
+          }
+        });
+      });
+      statusCode = 201;
+    } else {
+      statusCode = 403;
+    }
   }
 
-  console.log('Request', request.url,'StatusCode', statusCode);
+  // console.log('Request Method', request.method,'StatusCode', statusCode);
   // Tell the client we are sending them plain text.
   //
   // You will need to change this if you are sending something
@@ -72,9 +101,17 @@ exports.requestHandler = function(request, response) {
 };
 
 var db = {
-  "/classes/messages": [],
-  "/classes/room1": []
+  "/classes/messages": {'ordered': []}
 };
+
+fs.readFile('db.json', function(err, data){
+  if(err) {
+    console.log('Error Message', err);
+    console.log('Creating new db file...');
+  } else {
+    db = JSON.parse(data);
+  }
+});
 
 // These headers will allow Cross-Origin Resource Sharing (CORS).
 // This code allows this server to talk to websites that

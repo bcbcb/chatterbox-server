@@ -1,5 +1,5 @@
 var app = {};
-app.room = 'HackReactor';
+app.room = 'HackReactor2';
 app.server = 'http://127.0.0.1:3000/classes/messages';
 app.friends = [];
 
