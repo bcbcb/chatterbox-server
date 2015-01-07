@@ -1,16 +1,16 @@
-var checksum = require('json-checksum');
-var fs = require('fs');
-var _ = require('underscore');
-var parseQueryString = require('url').parse;
-var sendResponse = require('./response-handler');
+var checksum = require("json-checksum");
+var fs = require("fs");
+var _ = require("underscore");
+var parseQueryString = require("url").parse;
+var sendResponse = require("./response-handler");
 var db;
 
-fs.readFile('db.json', function(err, data){
+fs.readFile("db.json", function(err, data){
   if(err) {
-    console.log('Error Message', err);
-    console.log('Creating new db.');
+    console.log("Error Message", err);
+    console.log("Creating new db.");
     db = {
-      'ordered': []
+      "ordered": []
     };
   } else {
     db = JSON.parse(data);
@@ -24,29 +24,29 @@ var storeDb = function(db, receivedMessage) {
   db.ordered.push(receivedMessage);
   db[receivedMessage.objectId] = receivedMessage;
 
-  fs.writeFile('db.json', JSON.stringify(db), function(err) {
+  fs.writeFile("db.json", JSON.stringify(db), function(err) {
     if (err) {
       throw err;
     } else {
-      console.log('Saved POST to db...');
+      console.log("Saved POST to db...");
     }
   });
 };
 
 var actions = {
-  'GET': function(request, response, query) {
+  "GET": function(request, response, query) {
 
     var data = {results: []};
     data.results = db.ordered.slice();
-    if (query.order === '-createdAt') {
+    if (query.order === "-createdAt") {
       data.results.reverse();
     }
 
     sendResponse(response, JSON.stringify(data), 200);
   },
 
-  'POST': function(request, response, query) {
-    request.on('data', function(data){
+  "POST": function(request, response, query) {
+    request.on("data", function(data){
       var receivedMessage = JSON.parse(data) ;
 
       storeDb(db, receivedMessage);
@@ -55,8 +55,8 @@ var actions = {
     });
   },
 
-  'OPTIONS': function(request, response, query) {
-    sendResponse(response, '', 200);
+  "OPTIONS": function(request, response, query) {
+    sendResponse(response, "", 200);
   }
 };
 
@@ -70,7 +70,7 @@ exports.requestHandler = function(request, response) {
   if (action) {
     action(request, response, query);
   } else {
-    sendResponse(response, '', 403);
+    sendResponse(response, "", 403);
   }
 };
 
