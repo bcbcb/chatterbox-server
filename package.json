@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "json-checksum": "^0.1.4",
+    "mime": "^1.2.11",
     "underscore": "^1.7.0"
   }
 }
